@@ -48,6 +48,3 @@ include("testing:gto-support-dagger")
 include("testing:gto-support-okta")
 include("testing:gto-support-picasso")
 include("testing:gto-support-timber")
-
-// deprecated modules
-include("gto-support-design")

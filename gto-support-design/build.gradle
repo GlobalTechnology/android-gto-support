@@ -1,5 +1,0 @@
-dependencies {
-    api project(':gto-support-material-components')
-
-    implementation "com.google.android.material:material:${deps.materialDesign}"
-}
