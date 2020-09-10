@@ -3,7 +3,6 @@
 package org.ccci.gto.android.common.util.os
 
 import android.os.Bundle
-import android.os.Parcelable
 import java.util.Locale
 import org.ccci.gto.android.common.compat.util.LocaleCompat
 import org.jetbrains.annotations.Contract
@@ -62,19 +61,3 @@ fun Bundle.getLocaleArray(key: String?) =
         ?.map { it?.let { LocaleCompat.forLanguageTag(it) } }?.toTypedArray()
 
 // endregion Locales
-
-// region Parcelables
-@Deprecated(
-    "Since v3.6.2, this was moved to the BundleKt package for java usage",
-    ReplaceWith("getParcelableArray(key, clazz)")
-)
-@JvmName("getParcelableArray")
-fun <T : Parcelable> deprecatedGetParcelableArray(bundle: Bundle, key: String?, clazz: Class<T>) =
-    bundle.getParcelableArray(key, clazz)
-
-@Deprecated(
-    "Since v3.6.2, renamed to getTypedParcelableArray() for Kotlin 1.4 update",
-    ReplaceWith("getTypedParcelableArray<T>(key)")
-)
-inline fun <reified T : Parcelable> Bundle.getParcelableArray(key: String?) = getTypedParcelableArray<T>(key)
-// endregion Parcelables
