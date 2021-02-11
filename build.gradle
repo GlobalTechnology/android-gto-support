@@ -17,7 +17,6 @@ buildscript {
             jsonUnit            : '2.24.0',
             junit               : '4.13.1',
             junitParams         : '1.1.1',
-            kotlin              : '1.4.30',
             kotlinCoroutines    : '1.4.2',
             leakcanary2         : '2.6',
             lightweightStream   : '1.2.1',
@@ -67,19 +66,11 @@ buildscript {
     ext.deps.firebase = [
             crashlytics: '17.3.0'
     ]
-
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${deps.kotlin}"
-    }
 }
 plugins {
     id 'com.android.library' apply false
     id "com.vanniktech.android.junit.jacoco" version "0.16.0"
+    id 'org.jetbrains.kotlin.android' apply false
     id 'org.jlleitschuh.gradle.ktlint' version '10.0.0' apply false
 }
 
@@ -144,7 +135,7 @@ configure(subprojects.findAll { it.path.contains("gto-support") }) {
         }
 
         dependencies {
-            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${deps.kotlin}"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
             compileOnly "androidx.annotation:annotation:${deps.androidX.annotation}"
             compileOnly "org.jetbrains:annotations:${deps.jetbrainsAnnotations}"
@@ -174,7 +165,7 @@ configure(subprojects.findAll { it.path.contains("gto-support") }) {
                 force "org.jetbrains:annotations:${deps.jetbrainsAnnotations}"
 
                 dependencySubstitution {
-                    substitute module('org.jetbrains.kotlin:kotlin-stdlib-jdk8') with module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${deps.kotlin}")
+                    substitute module('org.jetbrains.kotlin:kotlin-stdlib-jdk8') with module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
 
                     // use the new condensed version of hamcrest
                     substitute module('org.hamcrest:hamcrest-core') with module("org.hamcrest:hamcrest:${deps.hamcrest}")
