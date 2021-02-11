@@ -1,0 +1,189 @@
+//import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+//
+configure(subprojects.findAll { it.path.contains("gto-support") }) {
+    apply plugin: 'com.android.library'
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-kapt'
+
+    group 'org.ccci.gto.android'
+    version '3.7.2-SNAPSHOT'
+
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://cruglobal.jfrog.io/cruglobal/list/maven-locals/' }
+        mavenLocal()
+    }
+
+    beforeEvaluate {
+        android {
+            compileSdkVersion 30
+
+            defaultConfig {
+                minSdkVersion 19
+                targetSdkVersion 30
+
+                consumerProguardFiles "$rootProject.projectDir/proguard-consumer-jetbrains.pro"
+
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+            }
+
+            adbOptions {
+                timeOutInMs 600000
+            }
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+            dexOptions {
+                preDexLibraries !project.hasProperty('disablePreDex')
+            }
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8.toString()
+                freeCompilerArgs += '-Xjvm-default=all'
+            }
+            testOptions {
+                unitTests {
+                    includeAndroidResources = true
+
+                    all {
+                        // increase unit tests max heap size
+                        jvmArgs "-Xmx2g"
+
+                        // enable only SDKs we actually support in robolectric
+                        // TODO: SDK >= 29 requires Java 9 which we don't currently support
+                        systemProperty 'robolectric.enabledSdks', (android.defaultConfig.minSdkVersion.apiLevel..28).join(" ")
+                    }
+                }
+            }
+        }
+
+        dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${deps.kotlin}"
+
+            compileOnly "androidx.annotation:annotation:${deps.androidX.annotation}"
+            compileOnly "org.jetbrains:annotations:${deps.jetbrainsAnnotations}"
+
+            androidTestImplementation "androidx.test:runner:${deps.androidX.test}"
+            androidTestImplementation "androidx.test:rules:${deps.androidX.test}"
+            androidTestImplementation "androidx.test.ext:junit:${deps.androidX.testJUnit}"
+            androidTestImplementation "org.hamcrest:hamcrest-library:${deps.hamcrest}"
+
+            testImplementation "androidx.test.ext:junit:${deps.androidX.testJUnit}"
+            testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${deps.mockitoKotlin}"
+            testImplementation "junit:junit:${deps.junit}"
+            testImplementation "org.mockito:mockito-inline:${deps.mockito}"
+            testImplementation "org.robolectric:robolectric:${deps.robolectric}"
+        }
+
+        configurations.all {
+            resolutionStrategy {
+                force "androidx.annotation:annotation:${deps.androidX.annotation}"
+                force "androidx.arch.core:core-common:${deps.androidX.arch}"
+                force "androidx.collection:collection:${deps.androidX.collection}"
+                force "androidx.core:core:${deps.androidX.core}"
+                force "androidx.lifecycle:lifecycle-runtime:${deps.androidX.lifecycle}"
+                force "androidx.lifecycle:lifecycle-viewmodel-savedstate:${deps.androidX.lifecycle}"
+                force "com.squareup.okio:okio:${deps.okio}"
+                force "junit:junit:${deps.junit}"
+                force "org.jetbrains:annotations:${deps.jetbrainsAnnotations}"
+
+                dependencySubstitution {
+                    substitute module('org.jetbrains.kotlin:kotlin-stdlib-jdk8') with module("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
+
+                    // use the new condensed version of hamcrest
+                    substitute module('org.hamcrest:hamcrest-core') with module("org.hamcrest:hamcrest:${deps.hamcrest}")
+                    substitute module('org.hamcrest:hamcrest-library') with module("org.hamcrest:hamcrest:${deps.hamcrest}")
+                }
+            }
+        }
+    }
+
+    // configure checkstyle
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion '7.8.2'
+    }
+    task checkstyle(type: Checkstyle) {
+        configFile rootProject.file('config/checkstyle/checkstyle.xml')
+        source 'src'
+        include '*/java/**/*.java'
+        ignoreFailures false
+        showViolations true
+
+        classpath = files()
+    }
+    afterEvaluate {
+        project.tasks.findByName("check")?.dependsOn('checkstyle')
+    }
+
+    // configure ktlint
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+    ktlint {
+        android = true
+//        reporters {
+//            reporter(ReporterType.PLAIN_GROUP_BY_FILE)
+//            reporter(ReporterType.CHECKSTYLE)
+//        }
+    }
+
+    // configure publishing
+    apply plugin: 'maven-publish'
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+    }
+    afterEvaluate {
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    from components.release
+
+                    groupId = project.group
+                    artifactId = project.name
+                    version = project.version
+
+                    pom.withXml {
+                        def scm = asNode().appendNode('scm')
+                        scm.appendNode('connection', POM_SCM_CONNECTION)
+                        scm.appendNode('developerConnection', POM_SCM_CONNECTION)
+                    }
+
+                    artifact sourcesJar {
+                        classifier 'sources'
+                    }
+                }
+            }
+            repositories {
+                maven {
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "https://cruglobal.jfrog.io/cruglobal/list/maven-cru-android-public-snapshots-local/"
+                    } else {
+                        url "https://cruglobal.jfrog.io/cruglobal/list/maven-cru-android-public-releases-local/"
+                    }
+
+                    credentials {
+                        username cruGlobalMavenRepositoryUsername
+                        password cruGlobalMavenRepositoryPassword
+                    }
+                }
+            }
+        }
+    }
+}
+
+// jacoco config
+junitJacoco {
+    jacocoVersion = deps.jacoco
+    includeNoLocationClasses = true
+}
+task jacocoTestReport {
+    subprojects.each { dependsOn(it.tasks.withType(JacocoReport)) }
+}
+allprojects {
+    if (gradle.startParameter.excludedTaskNames.contains("test")) {
+        // exclude all test type tasks when the test task is excluded
+        tasks.withType(Test).all { gradle.startParameter.excludedTaskNames += it.name }
+    }
+}
