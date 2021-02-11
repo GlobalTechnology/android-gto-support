@@ -8,7 +8,6 @@ buildscript {
             daggerHilt          : '2.32-alpha',
             eventbus            : '3.2.0',
             facebookFlipper     : '0.75.0',
-            gradleAndroidPlugin : '4.1.2',
             gson                : '2.8.6',
             guava               : '30.1-android',
             hamcrest            : '2.2',
@@ -50,7 +49,7 @@ buildscript {
             collection           : '1.1.0',
             concurrent           : '1.1.0',
             core                 : '1.3.2',
-            databinding          : deps.gradleAndroidPlugin,
+            databinding          : "$gradlePluginAndroidVersion",
             fragment             : '1.2.5',
             lifecycle            : '2.3.0',
             loader               : '1.1.0',
@@ -75,11 +74,11 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:${deps.gradleAndroidPlugin}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${deps.kotlin}"
     }
 }
 plugins {
+    id 'com.android.library' apply false
     id "com.vanniktech.android.junit.jacoco" version "0.16.0"
     id 'org.jlleitschuh.gradle.ktlint' version '10.0.0' apply false
 }
