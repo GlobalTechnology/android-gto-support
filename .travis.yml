@@ -11,7 +11,7 @@ env:
 branches:
   only:
   - master
-  - /^feature\/.*/
+#  - /^feature\/.*/
   - /^v\d+(\.\d+){1,}$/
 
 stages:
