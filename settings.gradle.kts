@@ -1,18 +1,3 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        jcenter()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            when (requested.id.namespace) {
-                "com.android" -> useModule("com.android.tools.build:gradle:${requested.version}")
-            }
-        }
-    }
-}
-
 include("gto-support-androidx-collection")
 include("gto-support-androidx-databinding")
 include("gto-support-androidx-fragment")
@@ -66,3 +51,18 @@ include("gto-support-design")
 include("gto-support-lifecycle")
 include("gto-support-room")
 include("gto-support-testing")
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        jcenter()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            when (requested.id.namespace) {
+                "com.android" -> useModule("com.android.tools.build:gradle:${requested.version}")
+            }
+        }
+    }
+}
