@@ -1,6 +1,6 @@
 dependencies {
-    implementation "com.squareup.leakcanary:leakcanary-android:${deps.leakcanary2}"
+    implementation "com.squareup.leakcanary:leakcanary-android:${deps2.leakcanary2}"
 
-    compileOnly "com.google.firebase:firebase-crashlytics:${deps.firebase.crashlytics}"
+    compileOnly "com.google.firebase:firebase-crashlytics:${deps2.firebase.crashlytics}"
     compileOnly "com.jakewharton.timber:timber:${deps.timber}"
 }
