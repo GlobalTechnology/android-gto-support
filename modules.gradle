@@ -61,7 +61,7 @@ configure(subprojects.findAll { it.path.contains("gto-support") }) {
         }
 
         dependencies {
-            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${deps.kotlin}"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
 
             compileOnly "androidx.annotation:annotation:${deps.androidX.annotation}"
             compileOnly "org.jetbrains:annotations:${deps.jetbrainsAnnotations}"

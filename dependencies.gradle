@@ -14,7 +14,6 @@ ext.deps = [
         jsonUnit            : '2.24.0',
         junit               : '4.13.1',
         junitParams         : '1.1.1',
-        kotlin              : '1.4.30',
         kotlinCoroutines    : '1.4.2',
         leakcanary2         : '2.6',
         lightweightStream   : '1.2.1',
