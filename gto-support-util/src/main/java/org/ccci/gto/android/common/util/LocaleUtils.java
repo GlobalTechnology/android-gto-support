@@ -51,15 +51,6 @@ public class LocaleUtils {
         }
     }
 
-    /**
-     * @deprecated Since v3.6.2, use {@link LocaleKt#getOptionalDisplayName(Locale, Locale)} instead.
-     */
-    @Nullable
-    @Deprecated
-    public static String getOptionalDisplayName(@NonNull final Locale locale, @Nullable final Locale inLocale) {
-        return LocaleKt.getOptionalDisplayName(locale, inLocale);
-    }
-
     // region Language fallback methods
 
     public static void addFallback(@NonNull final String locale, @NonNull final String fallback) {
