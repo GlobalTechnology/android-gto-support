@@ -10,9 +10,6 @@ dependencies {
     // OkHttp3 Module dependencies
     compileOnly "com.squareup.okhttp3:okhttp:${deps.okhttp3}"
 
-    // WorkManager Module dependencies
-    compileOnly "androidx.work:work-runtime:${deps.androidX.work}"
-
     kapt "com.google.dagger:dagger-compiler:${deps.dagger}"
 
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${deps.mockitoKotlin}"
