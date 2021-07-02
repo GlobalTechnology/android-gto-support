@@ -1,10 +1,8 @@
 package org.ccci.gto.android.common.util.os
 
-import android.graphics.Point
 import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import java.util.Locale
-import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -71,33 +69,5 @@ class BundleUtilsTest {
         assertEquals(Locale.ENGLISH, bundle.getLocale(KEY1))
         assertEquals(Locale.FRENCH, bundle.getLocale(KEY2))
         assertNull(bundle.getLocale(KEY3))
-    }
-
-    @Test
-    fun verifyGetParcelableArray() {
-        val points = arrayOf(Point(0, 0), null, Point(1, 1))
-        val bundle = Bundle().apply {
-            putParcelableArray(KEY1, points)
-            putParcelableArray(KEY2, null)
-        }
-
-        val resp = deprecatedGetParcelableArray(bundle, KEY1, Point::class.java)!!
-        assertEquals(points.javaClass, resp.javaClass)
-        assertArrayEquals(points, resp)
-        assertNull(deprecatedGetParcelableArray(bundle, KEY2, Point::class.java))
-    }
-
-    @Test
-    fun verifyGetParcelableArrayReified() {
-        val points = arrayOf(Point(0, 0), null, Point(1, 1))
-        val bundle = Bundle().apply {
-            putParcelableArray(KEY1, points)
-            putParcelableArray(KEY2, null)
-        }
-
-        val resp = bundle.getParcelableArray<Point>(KEY1)!!
-        assertEquals(points.javaClass, resp.javaClass)
-        assertArrayEquals(points, resp)
-        assertNull(bundle.getParcelableArray<Point>(KEY2))
     }
 }

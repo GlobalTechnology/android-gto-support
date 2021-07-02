@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
 import org.ccci.gto.android.common.db.AbstractDao;
 import org.ccci.gto.android.common.db.Expression;
 import org.ccci.gto.android.common.db.Expression.Field;
@@ -11,11 +15,7 @@ import org.ccci.gto.android.common.db.Join;
 import org.ccci.gto.android.common.db.Query;
 import org.ccci.gto.android.common.db.Table;
 import org.ccci.gto.android.common.support.v4.content.SimpleCursorLoader;
-import org.ccci.gto.android.common.util.os.BundleUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
+import org.ccci.gto.android.common.util.os.BundleKt;
 
 import static org.ccci.gto.android.common.db.AbstractDao.ARG_DISTINCT;
 import static org.ccci.gto.android.common.db.AbstractDao.ARG_JOINS;
@@ -54,7 +54,7 @@ public class DaoCursorLoader<T> extends SimpleCursorLoader {
         mFrom = from;
         if (args != null) {
             setDistinct(args.getBoolean(ARG_DISTINCT, false));
-            setJoins(BundleUtils.getParcelableArray(args, ARG_JOINS, Join.class));
+            setJoins(BundleKt.getParcelableArray(args, ARG_JOINS, Join.class));
             setProjection(args.getStringArray(ARG_PROJECTION));
             setWhere(args.getParcelable(ARG_WHERE));
             setSortOrder(args.getString(ARG_ORDER_BY));
