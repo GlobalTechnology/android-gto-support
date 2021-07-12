@@ -18,7 +18,7 @@ buildscript {
             junit               : '4.13.2',
             junitParams         : '1.1.1',
             kotlin              : '1.5.10',
-            kotlinCoroutines    : '1.5.0',
+            kotlinCoroutines    : '1.5.1-native-mt',
             leakcanary2         : '2.7',
             lightweightStream   : '1.2.2',
             lottie              : '3.7.0',
